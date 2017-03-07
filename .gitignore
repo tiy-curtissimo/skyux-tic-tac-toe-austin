@@ -34,3 +34,4 @@ node_modules
 config/runtime.yaml
 
 tic-tac-toe-server/api/**/*.js
+tic-tac-toe-server/api/data

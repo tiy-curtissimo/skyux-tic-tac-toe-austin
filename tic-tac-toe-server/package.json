@@ -20,6 +20,7 @@
   },
   "scripts": {
     "start": "node app.js",
-    "test": "swagger project test"
+    "test": "clear && tsc && swagger project test && npm run clean",
+    "clean": "rm api/**/*.js"
   }
 }
