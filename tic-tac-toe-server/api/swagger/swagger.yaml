@@ -1,0 +1,197 @@
+swagger: "2.0"
+info:
+  version: "1.0.0"
+  title: Tic-Tac-Toe Server
+host: localhost:10010
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+
+paths:
+  /games:
+    x-swagger-router-controller: games
+    get:
+      description: Returns a list of tic-tac-toe games.
+      operationId: list
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/GamesListResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    post:
+      description: Create a new tic-tac-toe game.
+      operationId: create
+      parameters:
+        - name: gameRequest
+          in: body
+          description: A request to start a new game
+          required: true
+          schema:
+            $ref: '#/definitions/GameStartRequest'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Game'
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  '/games/{id}':
+    x-swagger-router-controller: games
+    get:
+      description: Returns an in-progress tic-tac-toe game.
+      operationId: details
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier for the game.
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Success
+          schema:
+            $ref: "#/definitions/Game"
+        "404":
+          description: Not Found
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    patch:
+      description: Make a move in the game.
+      operationId: update
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier for the game.
+          required: true
+          type: number
+        - name: move
+          in: body
+          description: The move instruction.
+          required: true
+          schema:
+            $ref: '#/definitions/MoveInstruction'
+      responses:
+        "200":
+          description: Move made successfully
+          schema:
+            $ref: "#/definitions/Game"
+        "409":
+          description: Move not allowed
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+    delete:
+      description: Remove a game from the server
+      operationId: remove
+      parameters:
+        - name: id
+          in: path
+          description: The unique identifier for the game.
+          required: true
+          type: number
+      responses:
+        "200":
+          description: Game removed
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
+  /swagger:
+    x-swagger-pipe: swagger_raw
+
+definitions:
+  MoveInstruction:
+    type: object
+    description: An instruction on making a move.
+    required:
+      - rowIndex
+      - columnIndex
+    properties:
+      rowIndex:
+        type: number
+        minimum: 0
+        maximum: 2
+      columnIndex:
+        type: number
+        minimum: 0
+        maximum: 2
+  GameStartRequest:
+    type: object
+    description: A request to start a game indicating if the human should make the first move.
+    required:
+      - humanPlayerFirst
+    properties:
+      humanPlayerFirst:
+        type: boolean
+  Game:
+    type: object
+    description: The state of a game.
+    required:
+      - id
+      - startedOn
+      - humanPlayerFirst
+      - board
+    properties:
+      id:
+        type: number
+      startedOn:
+        type: string
+        format: dateTime
+      humanPlayerFirst:
+        type: boolean
+      board:
+        type: array
+        description: The three rows of the board.
+        items:
+          type: array
+          description: The three columns in each row.
+          items:
+            type: number
+            description: The number of the player that made the move.
+            minimum: 0
+            maximum: 2
+      completed:
+        type: object
+        description: The completed game status
+        required:
+          - winnerIndex
+        properties:
+          winnerIndex:
+            type: number
+            description: The index of the winner.
+            minimum: 0
+            maximum: 2
+  GamesListResponse:
+    type: object
+    description: An object containing all the games the server knows about.
+    required:
+      - games
+    properties:
+      games:
+        type: array
+        items:
+          $ref: '#/definitions/Game'
+  ErrorResponse:
+    required:
+      - message
+    properties:
+      message:
+        type: string
