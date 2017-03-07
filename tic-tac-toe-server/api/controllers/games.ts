@@ -1,8 +1,11 @@
 import * as express from 'express';
 import { SwaggerRequest } from './swaggerInterop';
+import { GameRepository } from '../models/gameRepository';
+
+let repo = new GameRepository();
 
 export function list(req: express.Request, res: express.Response) : void {
-
+  res.json({ games: repo.list() });
 };
 
 export function create(req: SwaggerRequest, res: express.Response) : void {
