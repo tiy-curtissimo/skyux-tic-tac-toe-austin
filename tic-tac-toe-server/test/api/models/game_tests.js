@@ -16,7 +16,6 @@ describe('Game', function() {
 
   it('should play a 1 for a first-move human', function() {
     let game = new gamelib.Game(1, true);
-
     let result = game.play(0, 0);
 
     result.should.be.true();
@@ -26,10 +25,16 @@ describe('Game', function() {
   it('should play a 2 for a second-move human', function() {
     let game = new gamelib.Game(1, false);
 
-    let result = game.play(0, 0);
+    let result;
+    if (game.board[0][0] === 0) {
+        result = game.play(0, 0);
+        game.board[0][0].should.be.equal(2);
+    } else {
+        result = game.play(0, 1);
+        game.board[0][1].should.be.equal(2);
+    }
 
     result.should.be.true();
-    game.board[0][0].should.be.equal(2);
   });
 
   it('should not play in a square already played', function() {
