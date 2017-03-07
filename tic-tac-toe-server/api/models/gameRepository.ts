@@ -43,6 +43,7 @@ export class GameRepository {
       return null;
     }
     if (game.play(columnIndex, rowIndex)) {
+      this.writeStorage();
       return game;
     }
     return false;
@@ -53,13 +54,18 @@ export class GameRepository {
     if (index > -1) {
       this.games.splice(index, 1);
     }
+    this.writeStorage();
   }
 
   private addGame(game: Game): Game {
     this.games.push(game);
+    this.writeStorage();
+    return game;
+  }
+
+  private writeStorage(): void {
     fs.writeFile(this.dataPath, JSON.stringify(this.games), err => {
       debug(err);
     });
-    return game;
   }
 }
