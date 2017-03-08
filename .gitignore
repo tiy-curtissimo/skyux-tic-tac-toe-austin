@@ -4,6 +4,7 @@
 # Logs
 logs
 *.log
+npm-debug.log*
 
 # Runtime data
 pids
@@ -26,12 +27,28 @@ build/Release
 # Commenting this out is preferred by some people, see
 # https://www.npmjs.org/doc/misc/npm-faq.html#should-i-check-my-node_modules-folder-into-git
 node_modules
+jspm_packages
 
 # Users Environment Variables
 .lock-wscript
 
 # Runtime configuration for swagger app
 config/runtime.yaml
+
+# Optional npm cache directory
+.npm
+
+# Optional REPL history
+.node_repl_history
+
+# SKY UX temp directory
+.skyuxtmp
+
+# SKY UX build directory
+dist
+
+# OS specific files
+.DS_Store
 
 tic-tac-toe-server/api/**/*.js
 tic-tac-toe-server/api/data
