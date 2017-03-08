@@ -3,6 +3,7 @@ import { SwaggerRequest } from './swaggerInterop';
 import { GameRepository } from '../models/gameRepository';
 
 let repo = new GameRepository();
+repo.load();
 
 export function list(req: express.Request, res: express.Response) : void {
   res.json({ games: repo.list() });
