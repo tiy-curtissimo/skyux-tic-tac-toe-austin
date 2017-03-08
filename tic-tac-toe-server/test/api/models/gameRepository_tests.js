@@ -11,10 +11,15 @@ describe('GameRepository', () => {
     fs.unlink(dbpath, () => { done(); });
   })
 
-  it('should initialize correctly when the file does not exist', () => {
+  it('should initialize correctly when the file does not exist', done => {
     let repo = new gamelib.GameRepository(dbpath);
-
-    repo.list().should.deepEqual([]);
+    repo
+      .load()
+      .then(() => {
+        repo.list().should.deepEqual([]);
+        done();
+      })
+      .catch(done);
   });
 
   it('should contain the data from the data file', done => {
@@ -26,20 +31,28 @@ describe('GameRepository', () => {
       }
 
       let repo = new gamelib.GameRepository(dbpath);
-      setTimeout(() => {
-        repo.list().should.deepEqual(data);
-        done();
-      }, 100);
+      repo
+        .load()
+        .then(() => {
+          repo.list().should.deepEqual(data);
+          done();
+        })
+        .catch(done);
     });
   });
 
-  it('should add a new game to the list after create', () => {
+  it('should add a new game to the list after create', done => {
     let repo = new gamelib.GameRepository(dbpath);
+    repo
+      .load()
+      .then(() => {
+        let newGame = repo.create(true);
 
-    let newGame = repo.create(true);
-
-    repo.list().should.have.lengthOf(1);
-    repo.list()[0].should.be.equal(newGame);
+        repo.list().should.have.lengthOf(1);
+        repo.list()[0].should.be.equal(newGame);
+        done();
+      })
+      .catch(done);
   });
 
   it('should return a falsey value if it cannot find a game with the given id', () => {
@@ -59,10 +72,13 @@ describe('GameRepository', () => {
       }
 
       let repo = new gamelib.GameRepository(dbpath);
-      setTimeout(() => {
-        repo.find(4).should.deepEqual(data[0]);
-        done();
-      }, 100);
+      repo
+        .load()
+        .then(() => {
+          repo.find(4).should.deepEqual(data[0]);
+          done();
+        })
+        .catch(done);
     });
   });
 
@@ -75,12 +91,15 @@ describe('GameRepository', () => {
       }
 
       let repo = new gamelib.GameRepository(dbpath);
-      setTimeout(() => {
-        let game = repo.play(9, 1, 1);
+      repo
+        .load()
+        .then(() => {
+          let game = repo.play(9, 1, 1);
 
-        game.board[1][1].should.be.equal(1);
-        done();
-      }, 100);
+          game.board[1][1].should.be.equal(1);
+          done();
+        })
+        .catch(done);
     });
   });
 
@@ -93,14 +112,17 @@ describe('GameRepository', () => {
       }
 
       let repo = new gamelib.GameRepository(dbpath);
-      setTimeout(() => {
-        repo.destroy(2);
+      repo
+        .load()
+        .then(() => {
+          repo.destroy(2);
 
-        repo.list().should.have.lengthOf(2);
-        repo.list()[0].should.be.deepEqual(data[0]);
-        repo.list()[1].should.be.deepEqual(data[2]);
-        done();
-      }, 100);
+          repo.list().should.have.lengthOf(2);
+          repo.list()[0].should.be.deepEqual(data[0]);
+          repo.list()[1].should.be.deepEqual(data[2]);
+          done();
+        })
+        .catch(done);
     });
   });
 });
