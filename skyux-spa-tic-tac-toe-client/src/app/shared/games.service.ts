@@ -19,16 +19,32 @@ export interface GameModel {
 @Injectable()
 export class GamesService {
   private static _gameAdded: EventEmitter<GameModel>;
+  private static _gameRemoved: EventEmitter<number>;
 
   constructor(private http: Http) {
     if (!GamesService._gameAdded) {
       GamesService._gameAdded = new EventEmitter<GameModel>();
     }
+    if (!GamesService._gameRemoved) {
+      GamesService._gameRemoved = new EventEmitter<number>();
+    }
   }
 
   @Output()
-  public get gameAdded() {
+  public get gameAdded(): EventEmitter<GameModel> {
     return GamesService._gameAdded;
+  }
+
+  @Output()
+  public get gameRemoved(): EventEmitter<number> {
+    return GamesService._gameRemoved;
+  }
+
+  public delete(id: number): Observable<number> {
+    return this.http
+      .delete(`https://localhost:10010/games/${id}`)
+      .map(response => id)
+      .do(id => GamesService._gameRemoved.emit(id));
   }
 
   public move(id: number, rowIndex: number, columnIndex: number): Observable<GameModel> {

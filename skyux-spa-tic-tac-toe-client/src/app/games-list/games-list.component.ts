@@ -23,6 +23,8 @@ export class GamesListComponent implements OnInit {
   public ngOnInit() {
     this.service.gameAdded
       .subscribe(() => this.getAll());
+    this.service.gameRemoved
+      .subscribe(() => this.getAll());
     this.getAll();
   }
 

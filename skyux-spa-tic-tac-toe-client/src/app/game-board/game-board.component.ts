@@ -22,4 +22,10 @@ export class GameBoardComponent {
         this.game.completed = game.completed;
       });
   }
+
+  public handleButtonClick(): void {
+    this.service
+      .delete(this.game.id)
+      .subscribe(() => this.game = null);
+  }
 }

@@ -53,7 +53,7 @@ describe('GamesService', () => {
     expect(result.startedOn.valueOf()).toBe(date.valueOf());
   }));
 
-  it('#create firest gameAdded output', fakeAsync(() => {
+  it('#create fires gameAdded output', fakeAsync(() => {
     // ARRANGE
     let result: GameModel;
 
@@ -71,6 +71,30 @@ describe('GamesService', () => {
 
     // ASSERT
     expect(result).toBeDefined();
+  }));
+
+  it('#delete calls HTTP DELETE on my service', fakeAsync(() => {
+    // ARRANGE
+    let result: number;
+    let error: any;
+
+    // ACT
+    this.service
+      .delete(3)
+      .subscribe(
+        (n: number) => result = n,
+        err => error = err
+      );
+    this.lastConnection.mockRespond(new Response(new ResponseOptions({
+      body: ''
+    })));
+    tick(); // BLOCKING!!
+
+    // ASSERT
+    expect(this.lastConnection.request.method).toBe(RequestMethod.Delete);
+    expect(this.lastConnection.request.url).toBe('https://localhost:10010/games/3');
+    expect(error).toBeUndefined();
+    expect(result).toBe(3);
   }));
 
   it('#getAll(true) calls HTTP GET on my service', fakeAsync(() => {
