@@ -27,9 +27,21 @@ export class Game {
   }
 
   play(columnIndex: number, rowIndex: number): boolean {
-    if (this.board[rowIndex][columnIndex] === 0) {
+    if (!this.completed && this.board[rowIndex][columnIndex] === 0) {
       this.board[rowIndex][columnIndex] = this.humanPlayerFirst ? 1 : 2;
-      this.makeMove();
+      let winnerIndex = this.findWinnerIndex();
+      if (winnerIndex) {
+        this.completed = { winnerIndex: winnerIndex };
+      } else {
+        this.checkForFullBoard();
+        this.makeMove();
+        winnerIndex = this.findWinnerIndex();
+        if (winnerIndex) {
+          this.completed = { winnerIndex: winnerIndex };
+        } else {
+          this.checkForFullBoard();
+        }
+      }
       return true;
     }
     return false;
@@ -48,5 +60,66 @@ export class Game {
         break;
       }
     }
+  }
+
+  private checkForFullBoard(): void {
+    let isBoardFull = !this.board
+      .find(row => row.findIndex(square => square === 0) > -1);
+    if (isBoardFull) {
+      this.completed = { winnerIndex: 0 };
+    }
+  }
+
+  private findWinnerIndex(): number {
+    if (this.completed) {
+      return this.completed.winnerIndex;
+    }
+    let b = this.board;
+    if (this.isRowWinner(0)) {
+      return b[0][0];
+    } else if (this.isRowWinner(1)) {
+      return b[1][0];
+    } else if (this.isRowWinner(2)) {
+      return b[2][0];
+    } else if (this.isColumnWinner(0)) {
+      return b[0][0];
+    } else if (this.isColumnWinner(1)) {
+      return b[0][1];
+    } else if (this.isColumnWinner(2)) {
+      return b[0][2];
+    } else if (this.isRightDiagonalWinner()) {
+      return b[2][0];
+    } else if (this.isLeftDiagonalWinner()) {
+      return b[0][0];
+    }
+    return 0;
+  }
+
+  private isRightDiagonalWinner(): boolean {
+    let b = this.board;
+    return b[2][0] !== 0 &&
+           b[2][0] === b[1][1] &&
+           b[2][0] === b[0][2];
+  }
+
+  private isLeftDiagonalWinner(): boolean {
+    let b = this.board;
+    return b[0][0] !== 0 &&
+           b[0][0] === b[1][1] &&
+           b[0][0] === b[2][2];
+  }
+
+  private isRowWinner(rowIndex): boolean {
+    let b = this.board;
+    return b[rowIndex][0] !== 0 &&
+           b[rowIndex][0] === b[rowIndex][1] &&
+           b[rowIndex][0] === b[rowIndex][2];
+  }
+
+  private isColumnWinner(columnIndex): boolean {
+    let b = this.board;
+    return b[0][columnIndex] !== 0 &&
+           b[0][columnIndex] === b[1][columnIndex] &&
+           b[0][columnIndex] === b[2][columnIndex];
   }
 }
