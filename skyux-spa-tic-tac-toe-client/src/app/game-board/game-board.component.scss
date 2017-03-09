@@ -1,0 +1,47 @@
+.tic-tac-toe-choose-header {
+  text-align: center;
+}
+
+.tic-tac-toe-board-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.tic-tac-toe-board {
+  background-color: white;
+  border-top: 1px solid black;
+  border-left: 1px solid black;
+}
+
+.tic-tac-toe-board-row {
+  display: flex;
+
+  .tic-tac-toe-board-square {
+    border-right-color: black;
+    border-bottom-color: black;
+  }
+}
+
+.tic-tac-toe-board-square {
+  border: 1px solid transparent;
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 2em;
+  display: flex;
+  align-items: stretch;
+}
+
+.is-clickable {
+  cursor: pointer;
+}
+
+.fills-parent {
+  flex: 1 0 0px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}

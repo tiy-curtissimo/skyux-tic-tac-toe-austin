@@ -1,8 +1,17 @@
-<fieldset>
-  <legend>Create a game</legend>
-  <label>Human first?
-    <input type="checkbox" [(ngModel)]="isHumanPlayerFirst">
-  </label>
-  <button (click)="handleClick()">Create it!</button>
-  <span class="output">{{ output }}</span>
-</fieldset>
+<div class="create-game-container">
+  <sky-action-button (actionClick)="handleClick(true)">
+    <sky-action-button-icon iconType="user"></sky-action-button-icon>
+    <sky-action-button-header>You play first!</sky-action-button-header>
+    <sky-action-button-details>
+      Create a new game where you play first!
+    </sky-action-button-details>
+  </sky-action-button>
+  <sky-action-button (actionClick)="handleClick(false)">
+    <sky-action-button-icon iconType="desktop"></sky-action-button-icon>
+    <sky-action-button-header>The computer plays first.</sky-action-button-header>
+    <sky-action-button-details>
+      Create a new game where the computer plays the first move.
+    </sky-action-button-details>
+  </sky-action-button>
+  <sky-alert class="create-game-result-message" *ngIf="output" [alertType]="alertType">{{ output }}</sky-alert>
+</div>

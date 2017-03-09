@@ -1,0 +1,15 @@
+<h1 *ngIf="!game" class="tic-tac-toe-choose-header">Choose a game</h1>
+<div class="tic-tac-toe-board-container" *ngIf="game">
+  <h3>{{ game.startedOn | date: 'M/d/yyyy hh:mm a' }}</h3>
+  <div class="tic-tac-toe-board">
+    <div class="tic-tac-toe-board-row" *ngFor="let row of game.board; let i = index">
+      <div class="tic-tac-toe-board-square" *ngFor="let square of row; let j = index">
+        <div [ngSwitch]="square" class="fills-parent">
+          <div class="fills-parent" *ngSwitchCase="'1'">X</div>
+          <div class="fills-parent" *ngSwitchCase="'2'">O</div>
+          <div class="is-clickable fills-parent" (click)="handleClick(i, j)" *ngSwitchDefault></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

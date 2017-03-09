@@ -1,0 +1,5 @@
+<div class="app-shell">
+  <create-game></create-game>
+  <games-list (gameSelected)="game = $event"></games-list>
+  <game-board [game]="game"></game-board>
+</div>

@@ -24,28 +24,12 @@ describe('CreateGameComponent', () => {
     service = fixture.debugElement.injector.get(GamesService);
   });
 
-  it('should render a visible button', () => {
-    let element = fixture.nativeElement as HTMLElement;
-    expect(element.querySelector('button')).toBeVisible();
-  });
-
-  it('should render a checked checkbox by default', fakeAsync(() => {
-    fixture.detectChanges();
+  it('should render two visible buttons', fakeAsync(() => {
     tick();
-    fixture.detectChanges();
-    let element = fixture.nativeElement as HTMLElement;
-    let checkbox = element.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    expect(checkbox.checked).toBe(true);
-  }));
-
-  it('should render an unchecked checkbox when human player first is false', fakeAsync(() => {
-    component.isHumanPlayerFirst = false;
-    fixture.detectChanges();
-    tick();
-    fixture.detectChanges();
-    let element = fixture.nativeElement as HTMLElement;
-    let checkbox = element.querySelector('input[type="checkbox"]') as HTMLInputElement;
-    expect(checkbox.checked).toBe(false);
+    fixture.whenStable().then(() => {
+      let element = fixture.nativeElement as HTMLElement;
+      expect(element.querySelectorAll('sky-action-button').length).toBe(2);
+    });
   }));
 
   it('should create a game when the button is clicked', async(() => {
@@ -58,7 +42,7 @@ describe('CreateGameComponent', () => {
     let spy = spyOn(service, 'create')
       .and.returnValue(Observable.from<GameModel>([model]));
     let element = fixture.nativeElement as HTMLElement;
-    element.querySelector('button').click();
+    element.querySelector('.sky-action-button').click();
     fixture.whenStable().then(() => {
       expect(spy.calls.any()).toBe(true);
     });

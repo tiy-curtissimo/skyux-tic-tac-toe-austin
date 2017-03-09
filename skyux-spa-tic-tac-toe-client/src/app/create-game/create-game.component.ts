@@ -5,25 +5,29 @@ import { GamesService } from '../shared/games.service';
 @Component({
   selector: 'create-game',
   templateUrl: './create-game.component.html',
+  styleUrls: ['./create-game.component.scss'],
   providers: [ GamesService ]
 })
 export class CreateGameComponent {
-  public isHumanPlayerFirst: boolean;
   public output: string;
+  public alertType: string;
 
-  constructor(private service: GamesService) {
-    this.isHumanPlayerFirst = true;
-  }
+  constructor(private service: GamesService) {}
 
-  private handleClick() { // tslint:disable-line
+  private handleClick(humanPlaysFirst: boolean) { // tslint:disable-line
     this.service
-      .create(this.isHumanPlayerFirst)
+      .create(humanPlaysFirst)
       .subscribe(
         game => {
+          this.alertType = 'success';
           this.output = 'Game created';
           setTimeout(() => this.output = '', 2000);
         },
-        err => this.output = 'An error occured'
+        err => {
+          this.alertType = 'danger';
+          this.output = 'An error occured',
+          setTimeout(() => this.output = '', 2000);
+        }
       );
   }
 }

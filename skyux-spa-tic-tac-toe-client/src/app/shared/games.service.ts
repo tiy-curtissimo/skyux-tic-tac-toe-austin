@@ -31,6 +31,16 @@ export class GamesService {
     return GamesService._gameAdded;
   }
 
+  public move(id: number, rowIndex: number, columnIndex: number): Observable<GameModel> {
+    let payload = {
+      rowIndex: rowIndex,
+      columnIndex: columnIndex
+    };
+    return this.http
+      .patch(`https://localhost:10010/games/${id}`, payload)
+      .map(response => response.json());
+  }
+
   public getAll(): Observable<GameModel[]> {
     return this.http
       .get('https://localhost:10010/games')

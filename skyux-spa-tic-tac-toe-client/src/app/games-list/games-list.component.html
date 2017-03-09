@@ -1,6 +1,12 @@
 <div *ngIf="errorMessage">{{ errorMessage }}</div>
+<h3>Your games</h3>
 <ul>
   <li *ngFor="let game of games">
-    {{ game.startedOn }}
+    <a (click)="handleClick(game)" *ngIf="game !== selectedGame">
+      {{ game.startedOn | date: 'M/d/yyyy hh:mm a' }}
+    </a>
+    <b *ngIf="game === selectedGame">
+      {{ game.startedOn | date: 'M/d/yyyy hh:mm a' }}
+    </b>
   </li>
 </ul>
