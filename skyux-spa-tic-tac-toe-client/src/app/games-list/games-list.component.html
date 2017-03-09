@@ -8,5 +8,12 @@
     <b *ngIf="game === selectedGame">
       {{ game.startedOn | date: 'M/d/yyyy hh:mm a' }}
     </b>
+    <span *ngIf="game.completed">
+      <i *ngIf="game.completed.winnerIndex === 0">(tie)</i>
+      <i *ngIf="game.completed.winnerIndex === 1 && game.humanPlayerFirst">(you won)</i>
+      <i *ngIf="game.completed.winnerIndex === 2 && !game.humanPlayerFirst">(you won)</i>
+      <i *ngIf="game.completed.winnerIndex === 1 && !game.humanPlayerFirst">(you lost)</i>
+      <i *ngIf="game.completed.winnerIndex === 2 && game.humanPlayerFirst">(you lost)</i>
+    </span>
   </li>
 </ul>
