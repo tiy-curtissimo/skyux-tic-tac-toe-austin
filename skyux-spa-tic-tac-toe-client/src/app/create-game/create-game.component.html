@@ -1,0 +1,8 @@
+<fieldset>
+  <legend>Create a game</legend>
+  <label>Human first?
+    <input type="checkbox" [(ngModel)]="isHumanPlayerFirst">
+  </label>
+  <button (click)="handleClick()">Create it!</button>
+  <span class="output">{{ output }}</span>
+</fieldset>
