@@ -77,4 +77,48 @@ describe('Game', function() {
 
     foundOpponentsMove.should.be.true();
   });
+
+  it('should complete with no winner on a full board played by human', function () {
+    let game = new gamelib.Game(10, true);
+    game.board = [[1, 1, 2], [2, 2, 1], [1, 0, 2]];
+
+    game.play(1, 2);
+
+    game.completed.should.be.deepEqual({
+      winnerIndex: 0
+    });
+  });
+
+  it('should complete with no winner on a full board played by computer', function () {
+    let game = new gamelib.Game(10, false);
+    game.board = [[1, 1, 2], [2, 2, 1], [1, 0, 0]];
+
+    game.play(2, 2);
+
+    game.completed.should.be.deepEqual({
+      winnerIndex: 0
+    });
+  });
+
+  it('should complete with a winner from human', function () {
+    let game = new gamelib.Game(10, true);
+    game.board = [[1, 0, 2], [1, 0, 2], [0, 0, 0]];
+
+    game.play(0, 2);
+
+    game.completed.should.be.deepEqual({
+      winnerIndex: 1
+    });
+  });
+
+  it('should complete with a winner from computer', function () {
+    let game = new gamelib.Game(10, false);
+    game.board = [[1, 1, 2], [1, 2, 2], [0, 0, 1]];
+
+    game.play(1, 2);
+
+    game.completed.should.be.deepEqual({
+      winnerIndex: 1
+    });
+  });
 });
