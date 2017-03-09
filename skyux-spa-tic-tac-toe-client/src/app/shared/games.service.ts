@@ -1,4 +1,4 @@
-import { Injectable, Output } from '@angular/core';
+import { Injectable, Output, EventEmitter } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -18,12 +18,32 @@ export interface GameModel {
 
 @Injectable()
 export class GamesService {
-  constructor(private http: Http) {}
+  private static _gameAdded: EventEmitter<GameModel>;
+
+  constructor(private http: Http) {
+    if (!GamesService._gameAdded) {
+      GamesService._gameAdded = new EventEmitter<GameModel>();
+    }
+  }
+
+  @Output()
+  public get gameAdded() {
+    return GamesService._gameAdded;
+  }
+
+  public getAll(): Observable<GameModel[]> {
+    return this.http
+      .get('https://localhost:10010/games')
+      .map(response => response.json().games)
+      .do(games => games.forEach(game => game.startedOn = new Date(game.startedOn)));
+  }
 
   public create(humanPlayerFirst: boolean): Observable<GameModel> {
     let payload = { humanPlayerFirst: humanPlayerFirst };
     return this.http
       .post('https://localhost:10010/games', payload)
-      .map(response => response.json());
+      .map(response => response.json())
+      .do(game => game.startedOn = new Date(game.startedOn))
+      .do(game => GamesService._gameAdded.emit(game));
   }
 }
